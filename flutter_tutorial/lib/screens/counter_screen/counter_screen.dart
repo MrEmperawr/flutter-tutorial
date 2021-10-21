@@ -57,7 +57,7 @@ class _CounterScreenContent extends StatelessWidget {
                     onPressed: () {
                       BlocProvider.of<CounterCubit>(context).decrement();
                     },
-                    child: DefaultText('Press me for higher numbers'),
+                    child: DefaultText('Press me for lower numbers'),
                   ),
                   SizedBox(height: largerSize),
                   ElevatedButton(

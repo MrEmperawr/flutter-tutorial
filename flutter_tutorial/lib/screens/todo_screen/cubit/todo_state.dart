@@ -1,24 +1,20 @@
 part of 'todo_cubit.dart';
 
 class TodoState extends Equatable {
-  final int timesPushed;
-  final int counter;
+  final List<Todo> todos;
 
   TodoState({
-    required this.timesPushed,
-    required this.counter,
+    required this.todos,
   });
 
   TodoState copyWith({
-    int? timesPushed,
-    int? counter,
+    List<Todo>? todos,
   }) {
     return TodoState(
-      timesPushed: timesPushed ?? this.timesPushed,
-      counter: counter ?? this.counter,
+      todos: todos ?? this.todos,
     );
   }
 
   @override
-  List<Object> get props => [timesPushed, counter];
+  List<Object> get props => [todos];
 }

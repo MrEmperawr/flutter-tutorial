@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tutorial/config/constants.dart';
-import 'package:flutter_tutorial/config/theme.dart';
 import 'package:flutter_tutorial/screens/counter_screen/counter_screen.dart';
 import 'package:flutter_tutorial/screens/todo_screen/todo_screen.dart';
-import 'package:flutter_tutorial/shared/widgets/default_text.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = 'home_screen';
