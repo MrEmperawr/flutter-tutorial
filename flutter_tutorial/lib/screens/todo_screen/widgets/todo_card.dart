@@ -22,45 +22,43 @@ class TodoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Card(
-          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-          child: ListTile(
-            leading: IconButton(
-                icon: Icon(Icons.remove_circle_outline),
-                color: Colors.teal,
-                onPressed: () {
-                  if (leadingOnpressed != null) {
-                    leadingOnpressed!();
-                  }
-                }),
-            trailing: IconButton(
-                icon: Icon(Icons.settings),
-                color: Colors.teal,
-                onPressed: () {
-                  if (leadingOnpressed != null) {
-                    trailingOnpressed!();
-                  }
-                }),
-            title: _EditTextBox(
-              text: title,
-              editMode: editMode,
-              onChanged: (text) {
-                titeFieldOnChanged(text);
-              },
-            ),
-            subtitle: _EditTextBox(
-              text: description,
-              editMode: editMode,
-              onChanged: (text) {
-                descriptionFieldOnChanged(text);
-              },
-            ),
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+      child: ListTile(
+        leading: IconButton(
+            icon: Icon(Icons.remove_circle_outline),
+            color: Colors.teal,
+            onPressed: () {
+              if (leadingOnpressed != null) {
+                leadingOnpressed!();
+              }
+            }),
+        trailing: IconButton(
+            icon: Icon(Icons.settings),
+            color: Colors.teal,
+            onPressed: () {
+              if (leadingOnpressed != null) {
+                trailingOnpressed!();
+              }
+            }),
+        title: _EditTextBox(
+          text: title,
+          editMode: editMode,
+          onChanged: (text) {
+            titeFieldOnChanged(text);
+          },
+        ),
+        subtitle: Padding(
+          padding: EdgeInsets.only(bottom: mediumSize),
+          child: _EditTextBox(
+            text: description,
+            editMode: editMode,
+            onChanged: (text) {
+              descriptionFieldOnChanged(text);
+            },
           ),
         ),
-        SizedBox(height: mediumSize),
-      ],
+      ),
     );
   }
 }
