@@ -5,6 +5,7 @@ import 'package:flutter_tutorial/config/constants.dart';
 import 'package:flutter_tutorial/screens/home_screen.dart/home_screen.dart';
 import 'package:flutter_tutorial/screens/todo_screen/cubit/todo_cubit.dart';
 import 'package:flutter_tutorial/screens/todo_screen/models.dart';
+import 'package:flutter_tutorial/screens/todo_screen/widgets/todo_card.dart';
 
 class TodoScreen extends StatelessWidget {
   static const routeName = '/todo_screen';
@@ -48,37 +49,21 @@ Consider moving the todo creation to the top.
                       ),
                       SizedBox(height: mediumSize),
                       ...state.todos.map(
-                        (todo) => Card(
-                          margin: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 25.0),
-                          child: ListTile(
-                            leading: IconButton(
-                                // Render a different icon if it is not done
-                                icon: Icon(Icons.remove_circle_outline),
-                                color: Colors.teal,
-                                onPressed: () {
-                                  //print(todo.id);
-                                  BlocProvider.of<TodoCubit>(context)
-                                      .deleteTodo(todo.id);
-                                }),
-                            trailing: IconButton(
-                                // Render a different icon if it is not done
-                                icon: Icon(Icons.settings),
-                                color: Colors.teal,
-                                onPressed: () {
-                                  print('tis true');
-                                }),
-                            title: Text(
-                              todo.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Text(
-                              todo.description,
-                            ),
-                          ),
+                        (todo) => TodoCard(
+                          title: todo.title,
+                          description: todo.description,
+                          editMode: todo.editMode,
+                          leadingOnpressed: () {
+                            BlocProvider.of<TodoCubit>(context)
+                                .deleteTodo(todo.id);
+                          },
+                          trailingOnpressed: () {
+                            print(todo.editMode);
+                            BlocProvider.of<TodoCubit>(context)
+                                .toggleEditMode(todo.id);
+                          },
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -140,7 +125,10 @@ class TodoCreator extends StatelessWidget {
           controller: descTextController,
         ),
         const SizedBox(height: mediumSize),
+        // TODO FÖR DAVID
         // David gör en snygg error message-widget
+        // Alltså en stand-alone widget i en annan fil
+        // Den ska ha en default style med namn ish 'ErrorTextStyle'
         if (hasCreationError)
           Center(
             child: Text('ERROR'),
@@ -175,13 +163,14 @@ class TodoCreator extends StatelessWidget {
                 final isTodoValid = titleTextController.text.isNotEmpty &&
                     descTextController.text.isNotEmpty;
                 if (isTodoValid) {
+                  final timeStamp = DateTime.now();
                   BlocProvider.of<TodoCubit>(context).addTodo(
                     Todo(
-                      id: '${DateTime.now()}', // Tell me what this is. Why did I do this?
+                      id: '$timeStamp',
                       title: titleTextController.text,
                       description: descTextController.text,
-                      created: DateTime.now(),
-                      isDone: false, // Why false here?
+                      created: timeStamp,
+                      completed: false,
                     ),
                   );
                   resetFields();

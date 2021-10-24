@@ -26,8 +26,35 @@ class TodoCubit extends Cubit<TodoState> {
     emit(newState);
   }
 
-  void editTodo(String id) {
-    // Do this!
+  void toggleEditMode(String id) {
+    emit(state.copyWith(phase: TodoPhase.editing));
+
+    emit(
+      state.copyWith(
+        phase: TodoPhase.done,
+        todos: [
+          ...state.todos.map((todo) {
+            if (todo.id == id) {
+              return todo.copyWith(editMode: !todo.editMode);
+            }
+            return todo;
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
+  void editTodo({
+    String? title,
+    String? description,
+    bool? completed,
+    required String id,
+  }) {
+    emit(state.copyWith(phase: TodoPhase.editing));
+    // Do the rest - check out toggleEditMode for inspiration
+    // Find the correct todo
+    // Use copy with to change title, description or completed
+    // Emit the new copy
   }
 
   void hasError(bool creationError) {

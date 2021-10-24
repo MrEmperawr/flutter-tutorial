@@ -10,28 +10,32 @@ class Todo {
   final String title;
   final String description;
   final DateTime created;
-  final bool isDone;
+  final bool completed;
+  final bool editMode;
 
   Todo({
     required this.id,
     required this.title,
     required this.description,
     required this.created,
-    required this.isDone,
+    required this.completed,
+    this.editMode = false,
   });
 
-  copyWith({
+  Todo copyWith({
     String? title,
     String? description,
     DateTime? created,
-    bool? isDone,
+    bool? completed,
+    bool? editMode,
   }) {
     return Todo(
       id: this.id, // id will never change in this case
       title: title ?? this.title,
       description: description ?? this.description,
       created: created ?? this.created,
-      isDone: isDone ?? this.isDone,
+      completed: completed ?? this.completed,
+      editMode: editMode ?? this.editMode,
     );
   }
 

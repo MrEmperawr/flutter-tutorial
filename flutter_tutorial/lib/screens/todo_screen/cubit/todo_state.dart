@@ -3,6 +3,7 @@ part of 'todo_cubit.dart';
 enum TodoPhase {
   adding,
   deleting,
+  editing,
   pending,
   done,
 }
@@ -11,11 +12,13 @@ class TodoState extends Equatable {
   final List<Todo> todos;
   final bool todoCreationError;
   final TodoPhase phase;
+  final bool editMode;
 
   TodoState({
     required this.todos,
     required this.todoCreationError,
     required this.phase,
+    this.editMode = false,
   });
 
   TodoState copyWith({
