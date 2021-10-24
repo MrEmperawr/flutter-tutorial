@@ -34,4 +34,6 @@ class Todo {
       isDone: isDone ?? this.isDone,
     );
   }
+
+  bool get isValid => title.isNotEmpty && description.isNotEmpty;
 }

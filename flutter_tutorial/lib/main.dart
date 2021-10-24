@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.purple,
       ),
-      initialRoute: HomeScreen.routeName,
+      initialRoute: TodoScreen.routeName,
       routes: {
         HomeScreen.routeName: (context) => HomeScreen(),
         TodoScreen.routeName: (context) => TodoScreen(),

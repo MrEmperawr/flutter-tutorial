@@ -17,14 +17,7 @@ class TodoScreen extends StatelessWidget {
   }
 }
 
-class _TodoScreenContent extends StatefulWidget {
-  const _TodoScreenContent({Key? key}) : super(key: key);
-
-  @override
-  _TodoScreenContentState createState() => _TodoScreenContentState();
-}
-
-class _TodoScreenContentState extends State<_TodoScreenContent> {
+class _TodoScreenContent extends StatelessWidget {
   /*
 ALERT
 ALERT
@@ -42,62 +35,50 @@ Consider moving the todo creation to the top.
           listener: (context, state) {},
           child: BlocBuilder<TodoCubit, TodoState>(
             builder: (context, state) {
-              //print(state);
+              print(state);
               return Container(
                 width: double.infinity,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 300,
-                      child: TodoCreator(),
-                    ),
-                    SizedBox(height: mediumSize),
-                    /*ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: state.todos.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          height: 50,
-                          //color: Colors.amber[colorCodes[index]],
-                          child: Center(
-                              child: Text('Entry ${state.todos[index].id}')),
-                        );
-                      },
-                    ),*/
-                    // What is this? Explain what's going on here.
-                    ...state.todos.map(
-                      (todo) => Card(
-                        margin: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 25.0),
-                        child: ListTile(
-                          leading: IconButton(
-                              // Render a different icon if it is not done
-                              icon: Icon(Icons.remove_circle_outline),
-                              color: Colors.teal,
-                              onPressed: () {
-                                //print(todo.id);
-                                BlocProvider.of<TodoCubit>(context)
-                                    .deleteTodo(todo.id);
-                                setState(() {});
-                              }),
-                          trailing: IconButton(
-                              // Render a different icon if it is not done
-                              icon: Icon(Icons.settings),
-                              color: Colors.teal,
-                              onPressed: () {
-                                print('tis true');
-                              }),
-                          title: Text(todo.title),
-                          subtitle: Row(
-                            children: [
-                              Text(todo.description),
-                              const SizedBox(width: smallSize),
-                            ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 300,
+                        child: TodoCreator(),
+                      ),
+                      SizedBox(height: mediumSize),
+                      ...state.todos.map(
+                        (todo) => Card(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 25.0),
+                          child: ListTile(
+                            leading: IconButton(
+                                // Render a different icon if it is not done
+                                icon: Icon(Icons.remove_circle_outline),
+                                color: Colors.teal,
+                                onPressed: () {
+                                  //print(todo.id);
+                                  BlocProvider.of<TodoCubit>(context)
+                                      .deleteTodo(todo.id);
+                                }),
+                            trailing: IconButton(
+                                // Render a different icon if it is not done
+                                icon: Icon(Icons.settings),
+                                color: Colors.teal,
+                                onPressed: () {
+                                  print('tis true');
+                                }),
+                            title: Text(todo.title),
+                            subtitle: Row(
+                              children: [
+                                Text(todo.description),
+                                const SizedBox(width: smallSize),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -110,14 +91,8 @@ Consider moving the todo creation to the top.
 
 // Style this widget so it looks better.
 // At least so it matches the overall design of this scren.
-class TodoCreator extends StatefulWidget {
-  const TodoCreator({Key? key}) : super(key: key);
 
-  @override
-  _TodoCreatorState createState() => _TodoCreatorState();
-}
-
-class _TodoCreatorState extends State<TodoCreator> {
+class TodoCreator extends StatelessWidget {
   final titleTextController = TextEditingController();
   final descTextController = TextEditingController();
 
@@ -187,16 +162,21 @@ class _TodoCreatorState extends State<TodoCreator> {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () {
-                BlocProvider.of<TodoCubit>(context).addTodo(
-                  Todo(
-                    id: '${DateTime.now()}', // Tell me what this is. Why did I do this?
-                    title: titleTextController.text,
-                    description: descTextController.text,
-                    created: DateTime.now(),
-                    isDone: false, // Why false here?
-                  ),
-                );
-                resetFields();
+                if (titleTextController.text.isNotEmpty &&
+                    descTextController.text.isNotEmpty) {
+                  BlocProvider.of<TodoCubit>(context).addTodo(
+                    Todo(
+                      id: '${DateTime.now()}', // Tell me what this is. Why did I do this?
+                      title: titleTextController.text,
+                      description: descTextController.text,
+                      created: DateTime.now(),
+                      isDone: false, // Why false here?
+                    ),
+                  );
+                  resetFields();
+                } else {
+                  BlocProvider.of<TodoCubit>(context).hasError();
+                }
               },
               child: Text(
                 'Create Todo',
@@ -216,7 +196,5 @@ class _TodoCreatorState extends State<TodoCreator> {
   void resetFields() {
     titleTextController.clear();
     descTextController.clear();
-
-    //setState(() {});
   }
 }

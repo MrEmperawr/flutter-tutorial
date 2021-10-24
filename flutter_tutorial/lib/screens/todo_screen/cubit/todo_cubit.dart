@@ -7,7 +7,7 @@ part 'todo_state.dart';
 class TodoCubit extends Cubit<TodoState> {
   // When our state is a list or some class that is easy to inititliaze with dummy values this is a good way to handle things.
   // Not always possible. Sometimes the starting state might have to be null, or fetched from somewhere.
-  TodoCubit() : super(TodoState(todos: []));
+  TodoCubit() : super(TodoState.createInitState());
 
   void addTodo(Todo todo) {
     final newState = state.copyWith(
@@ -17,11 +17,23 @@ class TodoCubit extends Cubit<TodoState> {
   }
 
   void deleteTodo(String id) {
-    state.todos.removeWhere((element) => element.id == id);
-    emit(state);
+    print(id);
+    print(state.todos.first.id);
+
+    final newState = state.copyWith(
+      todos: state.todos..removeWhere((element) => element.id == id),
+    );
+
+    print(newState);
+    emit(newState);
   }
 
   void editTodo(String id) {
     // Do this!
+  }
+
+  void hasError() {
+    final newState = state.copyWith(todoCreationError: true);
+    emit(newState);
   }
 }
