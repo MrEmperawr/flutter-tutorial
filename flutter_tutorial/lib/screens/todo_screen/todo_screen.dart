@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_tutorial/config/constants.dart';
-import 'package:flutter_tutorial/config/theme.dart';
 import 'package:flutter_tutorial/screens/home_screen.dart/home_screen.dart';
 import 'package:flutter_tutorial/screens/todo_screen/cubit/todo_cubit.dart';
 import 'package:flutter_tutorial/screens/todo_screen/models.dart';
-import 'package:flutter_tutorial/shared/widgets/default_text.dart';
 
 class TodoScreen extends StatelessWidget {
   static const routeName = '/todo_screen';
