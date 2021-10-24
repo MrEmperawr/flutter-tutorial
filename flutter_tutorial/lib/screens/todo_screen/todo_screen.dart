@@ -35,7 +35,6 @@ Consider moving the todo creation to the top.
           listener: (context, state) {},
           child: BlocBuilder<TodoCubit, TodoState>(
             builder: (context, state) {
-              print(state);
               return Container(
                 width: double.infinity,
                 child: SingleChildScrollView(
@@ -43,7 +42,9 @@ Consider moving the todo creation to the top.
                     children: [
                       Container(
                         width: 300,
-                        child: TodoCreator(),
+                        child: TodoCreator(
+                          hasCreationError: state.todoCreationError,
+                        ),
                       ),
                       SizedBox(height: mediumSize),
                       ...state.todos.map(
@@ -67,12 +68,13 @@ Consider moving the todo creation to the top.
                                 onPressed: () {
                                   print('tis true');
                                 }),
-                            title: Text(todo.title),
-                            subtitle: Row(
-                              children: [
-                                Text(todo.description),
-                                const SizedBox(width: smallSize),
-                              ],
+                            title: Text(
+                              todo.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Text(
+                              todo.description,
                             ),
                           ),
                         ),
@@ -93,8 +95,11 @@ Consider moving the todo creation to the top.
 // At least so it matches the overall design of this scren.
 
 class TodoCreator extends StatelessWidget {
+  final bool hasCreationError;
   final titleTextController = TextEditingController();
   final descTextController = TextEditingController();
+
+  TodoCreator({required this.hasCreationError});
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +140,11 @@ class TodoCreator extends StatelessWidget {
           controller: descTextController,
         ),
         const SizedBox(height: mediumSize),
+        // David gör en snygg error message-widget
+        if (hasCreationError)
+          Center(
+            child: Text('ERROR'),
+          ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -162,8 +172,9 @@ class TodoCreator extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () {
-                if (titleTextController.text.isNotEmpty &&
-                    descTextController.text.isNotEmpty) {
+                final isTodoValid = titleTextController.text.isNotEmpty &&
+                    descTextController.text.isNotEmpty;
+                if (isTodoValid) {
                   BlocProvider.of<TodoCubit>(context).addTodo(
                     Todo(
                       id: '${DateTime.now()}', // Tell me what this is. Why did I do this?
@@ -174,8 +185,9 @@ class TodoCreator extends StatelessWidget {
                     ),
                   );
                   resetFields();
+                  BlocProvider.of<TodoCubit>(context).hasError(false);
                 } else {
-                  BlocProvider.of<TodoCubit>(context).hasError();
+                  BlocProvider.of<TodoCubit>(context).hasError(true);
                 }
               },
               child: Text(

@@ -12,19 +12,17 @@ class TodoCubit extends Cubit<TodoState> {
   void addTodo(Todo todo) {
     final newState = state.copyWith(
       todos: [...state.todos, todo], // Explain what is going on here.
+      phase: state.phase,
     );
     emit(newState);
   }
 
   void deleteTodo(String id) {
-    print(id);
-    print(state.todos.first.id);
-
+    emit(state.copyWith(phase: TodoPhase.deleting));
     final newState = state.copyWith(
-      todos: state.todos..removeWhere((element) => element.id == id),
+      todos: [...state.todos..removeWhere((element) => element.id == id)],
+      phase: TodoPhase.done,
     );
-
-    print(newState);
     emit(newState);
   }
 
@@ -32,8 +30,9 @@ class TodoCubit extends Cubit<TodoState> {
     // Do this!
   }
 
-  void hasError() {
-    final newState = state.copyWith(todoCreationError: true);
+  void hasError(bool creationError) {
+    final newState =
+        state.copyWith(todoCreationError: creationError, phase: state.phase);
     emit(newState);
   }
 }
