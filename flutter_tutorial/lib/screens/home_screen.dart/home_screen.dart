@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/screens/counter_screen/counter_screen.dart';
 import 'package:flutter_tutorial/screens/todo_screen/todo_screen.dart';
 
+import 'package:flutter_tutorial/config/constants.dart';
+import 'package:flutter_tutorial/config/theme.dart';
+
 class HomeScreen extends StatelessWidget {
   static const routeName = 'home_screen';
   const HomeScreen({Key? key}) : super(key: key);
@@ -104,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 20.0,
+                  width: mediumSize,
                 ),
                 ElevatedButton(
                   style: ButtonStyle(

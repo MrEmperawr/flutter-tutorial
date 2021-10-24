@@ -19,29 +19,14 @@ class TodoScreen extends StatelessWidget {
   }
 }
 
-class _TodoScreenContent extends StatelessWidget {
+class _TodoScreenContent extends StatefulWidget {
   const _TodoScreenContent({Key? key}) : super(key: key);
 
-  Widget buildCards() {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-      child: ListTile(
-        leading: Icon(
-          Icons.email,
-          color: Colors.teal,
-        ),
-        title: Text(
-          'haataja.david@gmail.com',
-          style: TextStyle(
-            color: Colors.teal.shade900,
-            fontFamily: 'RobotoSlab',
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-    );
-  }
+  @override
+  _TodoScreenContentState createState() => _TodoScreenContentState();
+}
 
+class _TodoScreenContentState extends State<_TodoScreenContent> {
   /*
 ALERT
 ALERT
@@ -50,133 +35,75 @@ Currently the widget tree will overflow if too many todos are rendered.
 Make sure that this screen can grow and become scrollable.
 Consider moving the todo creation to the top.
   */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.teal,
-      body: BlocListener<TodoCubit, TodoState>(
-        listener: (context, state) {},
-        child: BlocBuilder<TodoCubit, TodoState>(
-          builder: (context, state) {
-            print(state);
-            return Container(
-              width: double.infinity,
-              //color: Colors.blueAccent[200],
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  DefaultText(
-                    'To Do',
-                    style: textHeaderStyle,
-                  ),
-                  SizedBox(height: largeSize),
-                  // What is this? Explain what's going on here.
-                  ...state.todos.map(
-                    (todo) => Card(
-                      child: ListTile(
-                        leading: Icon(
-                          // Render a different icon if it is not done
-                          Icons.check_circle,
-                          color: Colors.teal,
-                        ),
-                        title: Text(todo.title),
-                        subtitle: Row(
-                          children: [
-                            Text(todo.description),
-                            const SizedBox(width: smallSize),
-                            Checkbox(
-                                value: todo.isDone,
-                                onChanged: (value) {
-                                  // Do something here to check this particular todo
-                                }),
-                          ],
+      body: SafeArea(
+        child: BlocListener<TodoCubit, TodoState>(
+          listener: (context, state) {},
+          child: BlocBuilder<TodoCubit, TodoState>(
+            builder: (context, state) {
+              //print(state);
+              return Container(
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 300,
+                      child: TodoCreator(),
+                    ),
+                    SizedBox(height: mediumSize),
+                    /*ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: state.todos.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          height: 50,
+                          //color: Colors.amber[colorCodes[index]],
+                          child: Center(
+                              child: Text('Entry ${state.todos[index].id}')),
+                        );
+                      },
+                    ),*/
+                    // What is this? Explain what's going on here.
+                    ...state.todos.map(
+                      (todo) => Card(
+                        margin: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 25.0),
+                        child: ListTile(
+                          leading: IconButton(
+                              // Render a different icon if it is not done
+                              icon: Icon(Icons.remove_circle_outline),
+                              color: Colors.teal,
+                              onPressed: () {
+                                //print(todo.id);
+                                BlocProvider.of<TodoCubit>(context)
+                                    .deleteTodo(todo.id);
+                                setState(() {});
+                              }),
+                          trailing: IconButton(
+                              // Render a different icon if it is not done
+                              icon: Icon(Icons.settings),
+                              color: Colors.teal,
+                              onPressed: () {
+                                print('tis true');
+                              }),
+                          title: Text(todo.title),
+                          subtitle: Row(
+                            children: [
+                              Text(todo.description),
+                              const SizedBox(width: smallSize),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  // ctrl + k + c on windows to comment code and ctrl + k + u to uncomment, fucking dumb
-                  // Card(
-                  //   margin:
-                  //       EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                  //   child: ListTile(
-                  //     leading: Icon(
-                  //       Icons.check_circle,
-                  //       color: Colors.teal,
-                  //     ),
-                  //     title: Text(
-                  //       'Generate cards from code and update the state (button click > update state(id, text?) > rebuild with new todo)',
-                  //       style: TextStyle(
-                  //         color: Colors.teal.shade900,
-                  //         fontFamily: 'RobotoSlab',
-                  //         fontSize: 18.0,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Card(
-                  //   margin:
-                  //       EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                  //   child: ListTile(
-                  //     leading: Icon(
-                  //       Icons.check_circle,
-                  //       color: Colors.teal,
-                  //     ),
-                  //     title: Text(
-                  //       'Track cards to enable removal of complete todos (button click > update state(remove todo using id) > rebuild without todo)',
-                  //       style: TextStyle(
-                  //         color: Colors.teal.shade900,
-                  //         fontFamily: 'RobotoSlab',
-                  //         fontSize: 18.0,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Card(
-                  //   margin:
-                  //       EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                  //   child: ListTile(
-                  //     leading: Icon(
-                  //       Icons.check_circle,
-                  //       color: Colors.teal,
-                  //     ),
-                  //     title: Text(
-                  //       'Use a text field to generate the todos, store id and content',
-                  //       style: TextStyle(
-                  //         color: Colors.teal.shade900,
-                  //         fontFamily: 'RobotoSlab',
-                  //         fontSize: 18.0,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  SizedBox(height: largeSize),
-                  Container(
-                    width: 300,
-                    child: TodoCreator(),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .popAndPushNamed(HomeScreen.routeName);
-                    },
-                    child: Text(
-                      'Go to To Home Screen',
-                      style: TextStyle(
-                        color: Colors.teal.shade900,
-                        fontFamily: 'RobotoSlab',
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            );
-          },
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -193,43 +120,94 @@ class TodoCreator extends StatefulWidget {
 }
 
 class _TodoCreatorState extends State<TodoCreator> {
-  String title = '';
-  String description = '';
+  final titleTextController = TextEditingController();
+  final descTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TextField(
-          decoration: InputDecoration(hintText: 'Title'),
-          onChanged: (value) {
-            title = value;
-          },
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: 'Title',
+            labelStyle: TextStyle(
+              color: Colors.white,
+              fontFamily: 'RobotoSlab',
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          ),
+          controller: titleTextController,
         ),
-        const SizedBox(height: largeSize),
         TextField(
-          decoration: InputDecoration(hintText: 'Description'),
-          onChanged: (value) {
-            description = value;
-          },
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: 'Description',
+            labelStyle: TextStyle(
+              color: Colors.white,
+              fontFamily: 'RobotoSlab',
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          ),
+          controller: descTextController,
         ),
-        const SizedBox(height: largeSize),
+        const SizedBox(height: mediumSize),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
+              },
+              child: Text(
+                'Home Screen',
+                style: TextStyle(
+                  color: Colors.teal.shade900,
+                  fontFamily: 'RobotoSlab',
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: smallSize,
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
               onPressed: () {
                 BlocProvider.of<TodoCubit>(context).addTodo(
                   Todo(
-                    id: '$title$description${DateTime.now()}', // Tell me what this is. Why did I do this?
-                    title: title,
-                    description: description,
+                    id: '${DateTime.now()}', // Tell me what this is. Why did I do this?
+                    title: titleTextController.text,
+                    description: descTextController.text,
                     created: DateTime.now(),
                     isDone: false, // Why false here?
                   ),
                 );
-                resetState();
+                resetFields();
               },
-              child: Text('Create Todo'),
+              child: Text(
+                'Create Todo',
+                style: TextStyle(
+                  color: Colors.teal.shade900,
+                  fontFamily: 'RobotoSlab',
+                  fontSize: 18.0,
+                ),
+              ),
             ),
           ],
         ),
@@ -237,10 +215,10 @@ class _TodoCreatorState extends State<TodoCreator> {
     );
   }
 
-  void resetState() {
-    setState(() {
-      title = '';
-      description = '';
-    });
+  void resetFields() {
+    titleTextController.clear();
+    descTextController.clear();
+
+    //setState(() {});
   }
 }
