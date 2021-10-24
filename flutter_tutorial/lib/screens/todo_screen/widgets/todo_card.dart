@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tutorial/config/constants.dart';
 
 class TodoCard extends StatelessWidget {
   final String title;
@@ -6,10 +7,14 @@ class TodoCard extends StatelessWidget {
   final Function? leadingOnpressed;
   final Function? trailingOnpressed;
   final bool editMode;
+  final Function(String?) titeFieldOnChanged;
+  final Function(String?) descriptionFieldOnChanged;
   const TodoCard({
     Key? key,
     required this.title,
     required this.description,
+    required this.titeFieldOnChanged,
+    required this.descriptionFieldOnChanged,
     this.editMode = false,
     this.leadingOnpressed,
     this.trailingOnpressed,
@@ -17,34 +22,45 @@ class TodoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-      child: ListTile(
-        leading: IconButton(
-            icon: Icon(Icons.remove_circle_outline),
-            color: Colors.teal,
-            onPressed: () {
-              if (leadingOnpressed != null) {
-                leadingOnpressed!();
-              }
-            }),
-        trailing: IconButton(
-            icon: Icon(Icons.settings),
-            color: Colors.teal,
-            onPressed: () {
-              if (leadingOnpressed != null) {
-                trailingOnpressed!();
-              }
-            }),
-        title: _EditTextBox(
-          text: title,
-          editMode: editMode,
+    return Column(
+      children: [
+        Card(
+          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+          child: ListTile(
+            leading: IconButton(
+                icon: Icon(Icons.remove_circle_outline),
+                color: Colors.teal,
+                onPressed: () {
+                  if (leadingOnpressed != null) {
+                    leadingOnpressed!();
+                  }
+                }),
+            trailing: IconButton(
+                icon: Icon(Icons.settings),
+                color: Colors.teal,
+                onPressed: () {
+                  if (leadingOnpressed != null) {
+                    trailingOnpressed!();
+                  }
+                }),
+            title: _EditTextBox(
+              text: title,
+              editMode: editMode,
+              onChanged: (text) {
+                titeFieldOnChanged(text);
+              },
+            ),
+            subtitle: _EditTextBox(
+              text: description,
+              editMode: editMode,
+              onChanged: (text) {
+                descriptionFieldOnChanged(text);
+              },
+            ),
+          ),
         ),
-        subtitle: _EditTextBox(
-          text: description,
-          editMode: editMode,
-        ),
-      ),
+        SizedBox(height: mediumSize),
+      ],
     );
   }
 }
@@ -52,9 +68,11 @@ class TodoCard extends StatelessWidget {
 class _EditTextBox extends StatelessWidget {
   final bool editMode;
   final String text;
+  final Function(String?) onChanged;
   const _EditTextBox({
     Key? key,
     required this.text,
+    required this.onChanged,
     this.editMode = false,
   }) : super(key: key);
 
@@ -67,12 +85,12 @@ class _EditTextBox extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       );
     } else {
-      final textController = TextEditingController();
       // Add TextField here
-      return Container(
-        color: Colors.pink,
-        height: 50,
-        width: 50,
+      return TextField(
+        decoration: InputDecoration(hintText: text),
+        onChanged: (text) {
+          onChanged(text);
+        },
       );
     }
   }

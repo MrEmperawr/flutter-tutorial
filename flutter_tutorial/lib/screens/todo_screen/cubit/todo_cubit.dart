@@ -51,6 +51,22 @@ class TodoCubit extends Cubit<TodoState> {
     required String id,
   }) {
     emit(state.copyWith(phase: TodoPhase.editing));
+    emit(
+      state.copyWith(
+        phase: TodoPhase.done,
+        todos: [
+          ...state.todos.map((todo) {
+            if (todo.id == id) {
+              return todo.copyWith(
+                title: title,
+                description: description,
+              );
+            }
+            return todo;
+          }).toList(),
+        ],
+      ),
+    );
     // Do the rest - check out toggleEditMode for inspiration
     // Find the correct todo
     // Use copy with to change title, description or completed

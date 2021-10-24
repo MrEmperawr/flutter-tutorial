@@ -62,6 +62,19 @@ Consider moving the todo creation to the top.
                             BlocProvider.of<TodoCubit>(context)
                                 .toggleEditMode(todo.id);
                           },
+                          titeFieldOnChanged: (text) {
+                            print(text);
+                            BlocProvider.of<TodoCubit>(context).editTodo(
+                              id: todo.id,
+                              title: text,
+                            );
+                          },
+                          descriptionFieldOnChanged: (text) {
+                            BlocProvider.of<TodoCubit>(context).editTodo(
+                              id: todo.id,
+                              description: text,
+                            );
+                          },
                         ),
                       )
                     ],
